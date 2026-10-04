@@ -2,7 +2,18 @@
 import pandas as pd
 
 from .config import LABEL_MAP, TEST_PATH, TRAIN_PATH
-from .preprocess import build_text_column
+from .preprocess import combine_title_description
+
+
+def build_text_column(df: pd.DataFrame) -> pd.Series:
+    """Create the raw model input from a dataframe with Title/Description."""
+    return pd.Series(
+        [
+            combine_title_description(t, d)
+            for t, d in zip(df["Title"].fillna(""), df["Description"].fillna(""))
+        ],
+        index=df.index,
+    )
 
 
 def load_dataset(path) -> tuple[pd.Series, pd.Series]:

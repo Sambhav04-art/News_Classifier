@@ -2,8 +2,6 @@
 import html
 import re
 
-import pandas as pd
-
 _URL_RE = re.compile(r"https?://\S+|www\.\S+")
 _TAG_RE = re.compile(r"<[^>]+>")
 _NON_ALNUM_RE = re.compile(r"[^a-z0-9\s']")
@@ -37,14 +35,3 @@ def combine_title_description(title: str, description: str) -> str:
     title = title or ""
     description = description or ""
     return f"{title}. {title}. {description}"
-
-
-def build_text_column(df: pd.DataFrame) -> pd.Series:
-    """Create the raw model input from a dataframe with Title/Description."""
-    return pd.Series(
-        [
-            combine_title_description(t, d)
-            for t, d in zip(df["Title"].fillna(""), df["Description"].fillna(""))
-        ],
-        index=df.index,
-    )
